@@ -10,6 +10,7 @@ cmake ../ \
         -DANDROID_TOOLCHAIN=clang++ \
         -DMNN_OPENCL:BOOL=ON \
         -DMNN_OPENMP:BOOL=ON \
+        -DMNN_BUILD_FOR_ANDROID_COMMAND=true \
         -DCMAKE_BUILD_TYPE=Debug \
 
 make -j8
