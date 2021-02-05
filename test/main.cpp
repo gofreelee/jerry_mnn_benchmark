@@ -18,11 +18,12 @@
 #include "OpInJs.h"
 #include "include/jerryscript.h"
 #include "include/jerryscript-ext/handler.h"
-    using namespace MNN::Express;
+using namespace MNN::Express;
 
 bool run();
 
 int main(int argc, char* argv[]) { 
+    printf("更新！！\n");
     printf("is %d \n", argc);
     if (argc > 2) {
         auto type = (MNNForwardType)atoi(argv[2]);
@@ -46,6 +47,7 @@ int main(int argc, char* argv[]) {
     //   MNNTestSuite::runAll();
     //  }
 
+
     jerry_init (JERRY_INIT_EMPTY);
 
     /* Register 'print' function from the extensions */
@@ -61,9 +63,9 @@ int main(int argc, char* argv[]) {
         input = Convert(input, 'NCHW'); \
         var start = getCurrentTime(); \
         print(start); \
-        for(var i = 0; i < 10000; ++i) \
+        for(var i = 0; i < 20000; ++i) \
         { \
-                Conv(filter, bias, input);  \
+            Conv(filter, bias, input);  \
         } \
         var end = getCurrentTime(); \
         print(end); \

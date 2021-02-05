@@ -283,6 +283,7 @@ jerry_value_t Conv_js(const jerry_value_t func_value, /**< function object */
     (MNN::Express::_Conv(*filter, *bias, *input, MNN::Express::CAFFE,
     {stride, stride}, {1, 1}, 2, {pad, pad}));
     jerry_value_t conv_result_tensor = jerry_create_object();
-    REGISTER_PTR_IN_JERRY(conv_result_tensor, conv_result_tensor)
+    REGISTER_PTR_IN_JERRY(conv_result_tensor, conv_result_tensor);
+    (*conv_result)->readMap<float>();
     return conv_result_tensor;
 }
