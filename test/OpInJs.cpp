@@ -43,7 +43,7 @@
     } \
 
 
-const int inputHeight = 224, inputWidth = 224, inputChannel = 2, outputChannel = 1;
+const int inputHeight = 224, inputWidth = 224, inputChannel = 3, outputChannel = 1;
 const int kernelSize = 3, stride = 2, pad = 1, batch = 1;
 const int height  = (inputHeight + 2 * pad - kernelSize) / stride + 1; // height = 3
 const int width   = (inputWidth + 2 * pad - kernelSize) / stride + 1;  // width = 3
@@ -76,7 +76,10 @@ const std::vector<float> filterData = {
 // outputChannel = 0, inputChannel = 0
 0.5567, 0.4559, 0.0203, 0.9659, 0.2679, 0.4117, 0.9696, 0.4567, 0.3787,
 // outputChannel = 0, inputChannel = 1
-0.3354, 0.2056, 0.0342, 0.023, 0.4683, 0.9966, 0.6097, 0.0873, 0.7917};
+0.3354, 0.2056, 0.0342, 0.023, 0.4683, 0.9966, 0.6097, 0.0873, 0.7917,
+
+0.3354, 0.2056, 0.0342, 0.023, 0.4683, 0.9966, 0.6097, 0.0873, 0.7917,
+};
 const std::vector<float> biasData   = {1.0};
 const std::vector<float> outputData = {2.930293, 4.682340, 2.721255, 3.087505, 5.198602,
                             4.088373, 1.564287, 3.151330, 3.109602};
@@ -84,7 +87,7 @@ const std::vector<float> outputData = {2.930293, 4.682340, 2.721255, 3.087505, 5
 void generate_input_data()
 {
     for(int i = 0; i < 224*224; ++i)
-        inputData[i] = inputData[i % 200];
+        inputData[i] = inputDataHelper[i % 200];
 }
 
  
@@ -311,6 +314,8 @@ jerry_value_t Conv_js(const jerry_value_t func_value, /**< function object */
     {stride, stride}, {1, 1}, 2, {pad, pad}));
     jerry_value_t conv_result_tensor = jerry_create_object();
     REGISTER_PTR_IN_JERRY(conv_result_tensor, conv_result_tensor);
-    (*conv_result)->readMap<float>();
+    const float * fptr = (*conv_result)->readMap<float>();
+    // for(int i = 0 ; i < 20; ++i)
+        // printf("%f\n", (fptr + i));
     return conv_result_tensor;
 }
