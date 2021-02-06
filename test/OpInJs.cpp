@@ -43,18 +43,35 @@
     } \
 
 
-const int inputHeight = 5, inputWidth = 5, inputChannel = 2, outputChannel = 1;
+const int inputHeight = 224, inputWidth = 224, inputChannel = 2, outputChannel = 1;
 const int kernelSize = 3, stride = 2, pad = 1, batch = 1;
 const int height  = (inputHeight + 2 * pad - kernelSize) / stride + 1; // height = 3
 const int width   = (inputWidth + 2 * pad - kernelSize) / stride + 1;  // width = 3
 
-const std::vector<float> inputData = {
+const std::vector<float> inputDataHelper = {
 // channel 0
+0.6345, 0.1219, 0.0424, 0.0501, 0.3934, 0.4311, 0.5961, 0.6642, 0.734, 0.062, 0.88, 0.503, 0.1638,
+0.6367, 0.2151, 0.0795, 0.7693, 0.134, 0.4963, 0.7571, 0.5428, 0.3663, 0.2823, 0.7478, 0.579,
+0.6345, 0.1219, 0.0424, 0.0501, 0.3934, 0.4311, 0.5961, 0.6642, 0.734, 0.062, 0.88, 0.503, 0.1638,
+0.6367, 0.2151, 0.0795, 0.7693, 0.134, 0.4963, 0.7571, 0.5428, 0.3663, 0.2823, 0.7478, 0.579,
+0.6345, 0.1219, 0.0424, 0.0501, 0.3934, 0.4311, 0.5961, 0.6642, 0.734, 0.062, 0.88, 0.503, 0.1638,
+0.6367, 0.2151, 0.0795, 0.7693, 0.134, 0.4963, 0.7571, 0.5428, 0.3663, 0.2823, 0.7478, 0.579,
 0.6345, 0.1219, 0.0424, 0.0501, 0.3934, 0.4311, 0.5961, 0.6642, 0.734, 0.062, 0.88, 0.503, 0.1638,
 0.6367, 0.2151, 0.0795, 0.7693, 0.134, 0.4963, 0.7571, 0.5428, 0.3663, 0.2823, 0.7478, 0.579,
 // channel 1
 0.6917, 0.4047, 0.9673, 0.9111, 0.608, 0.4621, 0.6567, 0.3192, 0.726, 0.9066, 0.885, 0.3491, 0.7938,
-0.2593, 0.3146, 0.6901, 0.2126, 0.649, 0.7919, 0.9838, 0.0672, 0.0357, 0.383, 0.5043, 0.2803};
+0.2593, 0.3146, 0.6901, 0.2126, 0.649, 0.7919, 0.9838, 0.0672, 0.0357, 0.383, 0.5043, 0.2803,
+0.6917, 0.4047, 0.9673, 0.9111, 0.608, 0.4621, 0.6567, 0.3192, 0.726, 0.9066, 0.885, 0.3491, 0.7938,
+0.2593, 0.3146, 0.6901, 0.2126, 0.649, 0.7919, 0.9838, 0.0672, 0.0357, 0.383, 0.5043, 0.2803,
+0.6917, 0.4047, 0.9673, 0.9111, 0.608, 0.4621, 0.6567, 0.3192, 0.726, 0.9066, 0.885, 0.3491, 0.7938,
+0.2593, 0.3146, 0.6901, 0.2126, 0.649, 0.7919, 0.9838, 0.0672, 0.0357, 0.383, 0.5043, 0.2803,
+0.6917, 0.4047, 0.9673, 0.9111, 0.608, 0.4621, 0.6567, 0.3192, 0.726, 0.9066, 0.885, 0.3491, 0.7938,
+0.2593, 0.3146, 0.6901, 0.2126, 0.649, 0.7919, 0.9838, 0.0672, 0.0357, 0.383, 0.5043, 0.2803,
+};
+
+std::vector<float> inputData(10000,0);
+
+
 const std::vector<float> filterData = {
 // outputChannel = 0, inputChannel = 0
 0.5567, 0.4559, 0.0203, 0.9659, 0.2679, 0.4117, 0.9696, 0.4567, 0.3787,
@@ -64,6 +81,11 @@ const std::vector<float> biasData   = {1.0};
 const std::vector<float> outputData = {2.930293, 4.682340, 2.721255, 3.087505, 5.198602,
                             4.088373, 1.564287, 3.151330, 3.109602};
 
+void generate_input_data()
+{
+    for(int i = 0; i < 224*224; ++i)
+        inputData[i] = inputData[i % 200];
+}
 
  
 void register_js_op()
@@ -220,6 +242,8 @@ jerry_value_t generate_conv_input(const jerry_value_t func_value, /**< function 
     (MNN::Express::_Input({batch, inputChannel, inputHeight, inputWidth}, MNN::Express::NCHW, halide_type_of<float>()));
     jerry_value_t tensor = jerry_create_object();
     REGISTER_PTR_IN_JERRY(tensor, conv_input_ptr)
+    ::memcpy((*conv_input_ptr)->writeMap<float>(), inputData.data(), inputData.size() * sizeof(float));
+    printf("inputdata size is %d\n", inputData.size());
     return tensor;
 }
 
@@ -233,6 +257,8 @@ jerry_value_t generate_conv_filter(const jerry_value_t func_value, /**< function
     (MNN::Express:: _Input({outputChannel, inputChannel, kernelSize, kernelSize}, MNN::Express::NCHW, halide_type_of<float>()));
     jerry_value_t filter = jerry_create_object();
     REGISTER_PTR_IN_JERRY(filter, conv_filter_ptr)
+    ::memcpy((*conv_filter_ptr)->writeMap<float>(), filterData.data(), filterData.size() * sizeof(float));
+
     return filter;
 }
 
@@ -245,6 +271,7 @@ jerry_value_t generate_conv_bias(const jerry_value_t func_value, /**< function o
     (MNN::Express::_Input({outputChannel}, MNN::Express::NCHW, halide_type_of<float>()));
     jerry_value_t bias = jerry_create_object();
     REGISTER_PTR_IN_JERRY(bias, conv_bias_ptr)
+    ::memcpy((*conv_bias_ptr)->writeMap<float>(), biasData.data(), biasData.size() * sizeof(float));
     return bias;
 }
 

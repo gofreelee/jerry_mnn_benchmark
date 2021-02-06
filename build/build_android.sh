@@ -1,4 +1,4 @@
-ABI="armeabi-v7a"
+ABI="arm64-v8a"
 ANDROID_DIR=/data/local/tmp
 
 cmake ../ \
@@ -11,9 +11,9 @@ cmake ../ \
         -DMNN_OPENCL:BOOL=ON \
         -DMNN_OPENMP:BOOL=ON \
         -DMNN_BUILD_FOR_ANDROID_COMMAND=true \
-        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_BUILD_TYPE=Release \
 
 make -j8
 
 adb push run_test.out $ANDROID_DIR
-adb shell "cd $ANDROID_DIR && source set_env.sh && ./run_test.out 0 3"
+adb shell "cd $ANDROID_DIR && source set_env.sh && ./run_test.out 0 0"

@@ -25,6 +25,7 @@ bool run();
 int main(int argc, char* argv[]) { 
     printf("更新！！\n");
     printf("is %d \n", argc);
+    generate_input_data();
     if (argc > 2) {
         auto type = (MNNForwardType)atoi(argv[2]);
         printf("the type is %d \n", type);
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]) {
         input = Convert(input, 'NCHW'); \
         var start = getCurrentTime(); \
         print(start); \
-        for(var i = 0; i < 20000; ++i) \
+        for(var i = 0; i < 1000; ++i) \
         { \
             Conv(filter, bias, input);  \
         } \

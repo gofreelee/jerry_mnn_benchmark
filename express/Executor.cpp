@@ -67,7 +67,6 @@ void Executor::Profiler::addFlops(const std::string& opType, float flops) {
 }
 #endif
 void Executor::setGlobalExecutorConfig(MNNForwardType type, const BackendConfig& config, int numberThread) {
-    printf("set backend type\n");
     std::lock_guard<std::mutex> _l(mMutex);
     auto creator = MNNGetExtraRuntimeCreator(type);
     if (nullptr == creator) {
