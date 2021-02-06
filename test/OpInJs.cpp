@@ -69,7 +69,7 @@ const std::vector<float> inputDataHelper = {
 0.2593, 0.3146, 0.6901, 0.2126, 0.649, 0.7919, 0.9838, 0.0672, 0.0357, 0.383, 0.5043, 0.2803,
 };
 
-std::vector<float> inputData(10000,0);
+std::vector<float> inputData(inputHeight * inputWidth,0);
 
 
 const std::vector<float> filterData = {
@@ -86,7 +86,7 @@ const std::vector<float> outputData = {2.930293, 4.682340, 2.721255, 3.087505, 5
 
 void generate_input_data()
 {
-    for(int i = 0; i < 224*224; ++i)
+    for(int i = 0; i < inputHeight * inputWidth; ++i)
         inputData[i] = inputDataHelper[i % 200];
 }
 

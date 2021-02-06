@@ -16,4 +16,4 @@ cmake ../ \
 make -j8
 
 adb push run_test.out $ANDROID_DIR
-adb shell "cd $ANDROID_DIR && source set_env.sh && ./run_test.out 0 0"
+adb shell "cd $ANDROID_DIR && source set_env.sh && ./run_test.out 0 3"
