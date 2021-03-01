@@ -14,6 +14,6 @@ cmake ../ \
         -DCMAKE_BUILD_TYPE=Release \
 
 make -j8
-
+adb push ../test/js-models/*.js $ANDROID_DIR
 adb push run_test.out $ANDROID_DIR
-adb shell "cd $ANDROID_DIR && source set_env.sh && ./run_test.out 0 3"
+adb shell "cd $ANDROID_DIR && source set_env.sh && ./run_test.out"
