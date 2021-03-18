@@ -55,7 +55,7 @@ function build_android_bench() {
           -DMNN_BUILD_BENCHMARK:BOOL=ON \
           -DMNN_BUILD_FOR_ANDROID_COMMAND=true \
           -DNATIVE_LIBRARY_OUTPUT=.
-    make -j8 benchmark.out timeProfile.out
+    make -j8 benchmark.out timeProfile.out benchmarkExprModels.out
 }
 
 function bench_android() {

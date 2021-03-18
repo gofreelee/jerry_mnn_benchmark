@@ -17,6 +17,7 @@
 //#define MNN_OPEN_TIME_TRACE
 #include "MNN/AutoTime.hpp"
 #include "MNN/expr/ExecutorScope.hpp"
+#include <stdio.h>
 
 //#define MNN_EXPRESS_ERROR_REPORT
 static inline std::string numberToString(int index) {
@@ -815,7 +816,6 @@ std::vector<VARP> Variable::mapToSequence(const std::map<std::string, VARP>& sou
 }
 void Variable::save(const std::vector<VARP>& vars, NetT* dest) {
     auto executeOrder = getExecuteOrder(vars);
-
     // Get Expr - TensorOffset Map
     std::map<EXPRP, int> varIndexInfo;
     {
@@ -829,7 +829,6 @@ void Variable::save(const std::vector<VARP>& vars, NetT* dest) {
         dest->tensorName.resize(tensorOffset);
     }
 
-    // Create All Op
     for (int index = 0; index < executeOrder.size(); ++index) {
         auto expr = executeOrder[index];
         auto mOp = expr->get();

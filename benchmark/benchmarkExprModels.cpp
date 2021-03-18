@@ -104,9 +104,14 @@ static std::vector<float> runNet(VARP netOutput, const ScheduleConfig& config, i
 
     // Warming up...
     for (int i = 0; i < 3; ++i) {
+        auto timeBegin = getTimeInUs();
+
         inputTensor->copyFromHostTensor(inputTensorHost.get());
         net->runSession(session);
         outputTensor->copyToHostTensor(outputTensorHost.get());
+
+        auto timeEnd = getTimeInUs();
+        std::cout << (timeEnd - timeBegin) << std::endl;
     }
 
     std::vector<float> costs;
@@ -120,6 +125,7 @@ static std::vector<float> runNet(VARP netOutput, const ScheduleConfig& config, i
         outputTensor->copyToHostTensor(outputTensorHost.get());
 
         auto timeEnd = getTimeInUs();
+        std::cout << (timeEnd - timeBegin) << std::endl;
         costs.push_back((timeEnd - timeBegin) / 1000.0);
     }
     return costs;
@@ -175,6 +181,7 @@ int main(int argc, const char* argv[]) {
     if (argc >= 5) {
         numThread = atoi(argv[4]);
     }
+
     std::cout << "Forward type: **" << forwardType(forward) << "** thread=" << numThread << std::endl;
     ScheduleConfig config;
     config.type = forward;
@@ -204,8 +211,10 @@ int main(int argc, const char* argv[]) {
                 std::cout << "Only [224, 192, 160, 128] be support" << std::endl;
                 return 1;
             }
+            std::cout << (int)mobileNetWidthType << " " << (int)mobileNetResolutionType << " " << numClass << std::endl;
             costs = runNet(mobileNetV1Expr(mobileNetWidthType, mobileNetResolutionType, numClass), config, loop);
         } else if (modelType == "MobileNetV2") {
+            printf("run mobileNetV2");
             costs = runNet(mobileNetV2Expr(numClass), config, loop);
         } else if (modelType == "ResNet") {
             auto resNetType = EnumResNetTypeByString(modelArgs[2]);
@@ -214,6 +223,7 @@ int main(int argc, const char* argv[]) {
                 std::cout << "Only [18, 34, 50, 101, 152] be support" << std::endl;
                 return 1;
             }
+            std::cout << "numclass is " << numClass << "resnettype is " << resNetType<< std::endl;
             costs = runNet(resNetExpr(resNetType, numClass), config, loop);
         } else if (modelType == "GoogLeNet") {
             costs = runNet(googLeNetExpr(numClass), config, loop);

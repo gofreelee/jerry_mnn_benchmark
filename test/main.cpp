@@ -39,9 +39,25 @@ static inline std::string forwardType(MNNForwardType type) {
     return "N/A";
 }
 
-
+struct node{
+    int data;
+    node* next;
+};
+struct block{
+    uint8_t number;
+    void* ptr;
+    block* next;
+}
+;
+int a  = 1;
+int b;
+// 0x10800000 - 0x10800008
+//ptr = 0x10800000 
 int main(int argc, char* argv[]) {
+    char* ptr = (char*)malloc(sizeof(char) * 8);
+    free(ptr);
     std::vector<std::string> model_files{
+        "MobileNetV1_100_1.0_224.js",
         "ResNet_50.js", "ResNet_18.js", "ResNet_34.js",
         "ResNet_101.js", "ResNet_152.js",
         "MobileNetV1_100_1.0_224.js", "SqueezeNet.js", "GoogLeNet.js",
@@ -50,8 +66,8 @@ int main(int argc, char* argv[]) {
     std::cout << "MNN Expr Models benchmark" << std::endl;
 
     size_t loop = 10;
-    MNNForwardType forward = MNN_FORWARD_OPENCL;
-    size_t numThread = 2;
+    MNNForwardType forward = MNN_FORWARD_CPU;
+    size_t numThread = 1;
 
     if (argc >= 2) {
         loop = atoi(argv[2]);
